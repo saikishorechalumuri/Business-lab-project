@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from "next/server";
 const protectedPrefixes = [
   "/dashboard",
   "/demo",
-  "/login",
   "/roles",
   "/reports",
   "/tasks",
@@ -31,7 +30,7 @@ export function middleware(request: NextRequest) {
   const hasAccess = request.cookies.get("business_lab_access")?.value === "granted";
   const demoLoginEnabled = process.env.ENABLE_DEMO_LOGIN === "true";
 
-  if (hasAccess || (demoLoginEnabled && pathname === "/login")) {
+  if (hasAccess || demoLoginEnabled) {
     return NextResponse.next();
   }
 

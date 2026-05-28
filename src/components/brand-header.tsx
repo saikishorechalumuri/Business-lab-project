@@ -23,6 +23,9 @@ export function BrandHeader() {
           <Link className="rounded-md px-3 py-2 hover:bg-[#141414] hover:text-white" href="/about">
             About
           </Link>
+          <Link className="rounded-md px-3 py-2 hover:bg-[#141414] hover:text-white" href="/login">
+            Demo Login
+          </Link>
           <Link className="rounded-md bg-[#FF7A00] px-3 py-2 font-bold text-[#050505] hover:bg-[#ff9a32]" href="/waitlist">
             Waitlist
           </Link>
