@@ -1,177 +1,254 @@
 # Business Lab
 
-Business Lab is a hackathon MVP for an AI-powered internal business operating
-system.
+**Business Lab turns reports into execution.**
 
-## Phase 1: Frontend Foundation
+Business Lab is an AI-powered internal business operating system built for the Fitness Lab AI community during the OpenAI x Outskill AI Builders Hackathon. It helps teams convert updates, reports, and ideas into assigned tasks, clear ownership, and measurable progress.
 
-Built so far:
+```text
+Reports -> AI Agent -> Tasks -> Assigned Roles -> Output Report
+```
 
-- Landing page
-- Demo business login page
+## Product Snapshot
+
+```text
+┌──────────────────────┐
+│ Public Website        │
+│ About + Waitlist      │
+└──────────┬───────────┘
+           │ invite-only access
+┌──────────▼───────────┐
+│ Internal OS           │
+│ Login + Role Selector │
+└──────────┬───────────┘
+           │
+┌──────────▼────────────────────────────────────────┐
+│ CEO -> VP -> Manager -> Team Member               │
+│ Reports -> Tasks -> Ownership -> Output Reports   │
+└───────────────────────────────────────────────────┘
+```
+
+## Why This Exists
+
+Most teams do not fail because they lack ideas. They fail because reports, responsibilities, and execution are disconnected.
+
+Business Lab creates a simple operating rhythm:
+
+```text
+Win the day -> repeat for 30 days -> win the month
+Win the month -> repeat for 12 months -> win the year
+```
+
+## MVP Features
+
+| Area | Built |
+| --- | --- |
+| Public site | Premium About page and invite-only Waitlist |
+| Access | Protected internal routes and demo OTP login |
+| Roles | CEO, VP, Manager, Team Member dashboards |
+| Reports | Create Report wizard, edit/delete, local persistence |
+| Tasks | Assigned Tasks, Tasks I Created, status updates |
+| Agents | Role agents, Report Builder Agent, CSV Insights Agent |
+| Backend shape | Fake agent API routes for report and chat flows |
+| Demo | One-click guided demo flow at `/demo` |
+| Storage | Supabase waitlist insert plus local fallback |
+
+## Phase Plan
+
+### Phase 1: Build The MVP
+
+Goal: prove the core product idea with a polished interface and clear flow.
+
+Built:
+
+- Premium black/orange Business Lab visual system
+- Public About page
+- Waitlist page
+- Demo OTP login
 - Role selector
-- About page
-- Join waitlist page
-- Route-based dashboards for CEO, VP, Manager, and Team Member
-- Black/orange Business Lab visual theme
-- Report builder modal/wizard placeholder
-- Five agent cards/placeholders
-- Task To Do and Output Report placeholders
+- CEO, VP, Manager, and Team Member dashboards
+- Report wizard
+- Agent preview sections
+- Protected internal product pages
 
-This phase uses local React state only. There is no database, real
-authentication, backend API, or OpenAI integration yet.
+### Phase 2: Launch And Ship
 
-## Phase 2: Local Reports and Tasks
+Goal: make the MVP usable enough to share, demo, and collect real interest.
 
-Built so far:
+Built:
 
-- Local browser-session state for reports, tasks, and output reports
-- LocalStorage persistence so demo data survives refreshes
-- Create Report wizard now creates a real local report
-- Approved/assigned reports create local task assignments
-- Reports can be edited and deleted
-- Tasks can move between To Do, In Progress, and Done
-- Activate Agent creates a local placeholder follow-up task
-- Output Report updates after Activate Agent
-- Dashboard demo flow panel and last-action feedback
-- CSV Insights Agent for every role with local CSV upload/paste analysis
-- Guided /demo page with one-click CEO -> VP -> Manager -> Team Member flow
+- Supabase-ready waitlist collection
+- Email, country code, and phone capture
+- Public-only About/Waitlist experience
+- Middleware route protection
+- Local report/task workflows
+- Guided `/demo` mode
+- Fake backend agent APIs
+- Vercel-ready build
 
-Phase 2 still does not use a database, Supabase, real authentication, backend
-API, or OpenAI. It proves the product workflow locally first.
+### Phase 3: Make It Real
 
-## Phase 3: Backend Agent Foundation
+Next:
 
-Started:
+- Real invite approval flow
+- Admin waitlist review dashboard
+- Real OTP/email provider
+- Real OpenAI agent responses
+- Durable report/task database
+- Production analytics and feedback loop
 
-- Added `/api/agent/report`
-- Added `/api/agent/chat`
-- `Activate Agent` now calls the fake backend API route
-- Role agents now call the fake backend chat API
-- API returns a generated task and output report
-- Frontend saves the API-generated task/output into local state
-- Local fallback remains if the fake API call fails
-- Demo OTP authentication stores verified user/business details in localStorage
-- Role selector and dashboards require demo OTP sign-in
+## Product Journey
 
-OpenAI is still not connected yet. This step creates the frontend-to-backend
-shape first.
+```text
+Visitor
+  -> About Page
+  -> Join Waitlist
+  -> Founder Reviews Request
+  -> Selected User Gets Invite
+  -> User Logs In
+  -> Chooses Role
+  -> Creates Report
+  -> Activates Agent
+  -> Tasks Are Assigned
+  -> Output Report Is Generated
+```
 
 ## Routes
 
+### Public Routes
+
 ```text
-/                         Redirects to public About page
-/login                    Demo business login
-/roles                    Role selector
-/about                    About Business Lab
-/waitlist                 Join waitlist
-/demo                     Guided demo mode
-/api/agent/chat           Fake role-agent chat route
-/api/agent/report         Fake backend agent route
-/api/waitlist             Waitlist submissions API
-/dashboard/ceo            CEO dashboard
-/dashboard/vp             VP dashboard
-/dashboard/manager        Manager dashboard
-/dashboard/team-member    Team Member dashboard
+/           Redirects to /about
+/about      Public product story
+/waitlist   Invite-only waitlist
 ```
+
+### Protected Internal Routes
+
+```text
+/login
+/roles
+/demo
+/dashboard/ceo
+/dashboard/vp
+/dashboard/manager
+/dashboard/team-member
+```
+
+### API Routes
+
+```text
+/api/waitlist       Waitlist submission API
+/api/agent/report   Fake report-agent API
+/api/agent/chat     Fake role-agent chat API
+```
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Framework | Next.js App Router |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Hosting | Vercel |
+| Waitlist DB | Supabase |
+| Local MVP state | React state + localStorage |
+| Auth MVP | Demo OTP + protected routes |
 
 ## Run Locally
 
-```bash
-npm run dev
+```powershell
+cd C:\Users\chalu\OneDrive\Desktop\codex-work\business-lab-project
+npm.cmd install
+npm.cmd run dev
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:3000
 ```
 
-## Project Structure
+## Environment Variables
+
+Create `.env.local` for local development:
 
 ```text
-src/app/page.tsx                    Landing page
-src/app/login/page.tsx              Demo login page
-src/app/roles/page.tsx              Role selector page
-src/app/about/page.tsx              About page
-src/app/waitlist/page.tsx           Join waitlist page
-src/app/demo/page.tsx               Guided demo mode page
-src/app/api/waitlist/route.ts       Waitlist API
-src/app/api/agent/chat/route.ts     Fake role-agent chat API
-src/app/api/agent/report/route.ts   Fake backend agent API
-src/app/dashboard/[role]/page.tsx   Dynamic dashboard route
-middleware.ts                       Public/internal route protection
-src/components/brand-header.tsx     Shared header
-src/components/dashboard-shell.tsx  Shared dashboard UI
-src/components/demo-runner.tsx      One-click demo flow UI
-src/components/auth-provider.tsx    Demo OTP auth state
-src/components/login-client.tsx     OTP login flow UI
-src/components/auth-gate.tsx        Sign-in required gate
-src/components/auth-status.tsx      Header auth status
-src/components/report-wizard.tsx    Create Report modal/wizard
-src/lib/agent-types.ts              Shared fake agent response types
-src/lib/business-lab-data.ts        Static demo data
-src/app/layout.tsx                  App metadata and root layout
-src/app/globals.css                 Tailwind import and global styles
-```
-
-## Next Phases
-
-Phase 2 will add local report creation, editing, deleting, and generated task
-assignment logic.
-
-Phase 3 will add backend API routes and AI agent activation.
-
-## Public Launch Notes
-
-Public visitors should only use:
-
-```text
-/
-/about
-/waitlist
-```
-
-Internal routes such as `/login`, `/roles`, `/demo`, and `/dashboard/*` are
-protected by middleware. For local demo testing, set:
-
-```text
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
+WAITLIST_ADMIN_TOKEN=your-secure-token
 ENABLE_DEMO_LOGIN=true
 ```
 
-Do not enable demo login for a public Vercel launch unless you intentionally
-want public demo access.
+For public Vercel launch, do not enable demo login unless reviewers need internal demo access.
+
+```text
+ENABLE_DEMO_LOGIN=false
+```
 
 ## View Waitlist Submissions
 
-Set `WAITLIST_ADMIN_TOKEN` in `.env.local` or Vercel environment variables.
-
-Waitlist submissions include:
+In Supabase:
 
 ```text
-id, name, email, country_code, phone, role, company, major_problem, status, created_at,
-invite_token, invited_at
+Table Editor -> waitlist_submissions
 ```
 
-Then call:
+Or with SQL:
 
-```powershell
-Invoke-RestMethod `
-  -Uri "http://localhost:3000/api/waitlist" `
-  -Headers @{ "x-admin-token" = "your-token" }
+```sql
+select *
+from public.waitlist_submissions
+order by created_at desc;
 ```
 
-Local development stores submissions in `.data/waitlist.json`. For production,
-connect this API route to Supabase or another durable database.
+Submission fields:
+
+```text
+id, name, email, country_code, phone, role, company,
+major_problem, status, created_at, invite_token, invited_at
+```
 
 ## Vercel Deployment
 
-1. Push the project to GitHub.
-2. Import it into Vercel.
+1. Push this repository to GitHub.
+2. Import the repo into Vercel.
 3. Add environment variables from `.env.example`.
-4. Leave `ENABLE_DEMO_LOGIN` unset or set to `false` for public launch.
-5. Run the default Vercel build command:
+4. Keep public routes open and internal routes protected.
+5. Deploy with:
 
 ```text
 npm run build
 ```
+
+## Founder
+
+**Sai Kishore Chalumuri**  
+Founder | Fitness Lab AI  
+AI Product Builder
+
+Founder message:
+
+> I am building Business Lab to help teams stop losing execution inside scattered reports, meetings, and follow-ups. The goal is simple: turn business information into action, ownership, and measurable progress.
+
+## Hackathon Submission Notes
+
+Business Lab was built as a fast MVP for the OpenAI x Outskill AI Builders Hackathon.
+
+Submission assets:
+
+- Public Vercel app
+- GitHub repository
+- 4-slide pitch deck
+- One-page pitch brief
+- Working waitlist
+- Protected internal MVP demo
+
+## Tiny Award
+
+```text
+BUSINESS LAB MVP AWARD
+Presented to: Sai Kishore Chalumuri
+For shipping a founder-led AI execution OS under deadline pressure.
+Status: Built. Shipped. Ready for review.
+```
+
