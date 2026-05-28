@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Business Lab
 
-## Getting Started
+Business Lab is a hackathon MVP for an AI-powered internal business operating
+system.
 
-First, run the development server:
+## Phase 1: Frontend Foundation
+
+Built so far:
+
+- Landing page
+- Demo business login page
+- Role selector
+- About page
+- Join waitlist page
+- Route-based dashboards for CEO, VP, Manager, and Team Member
+- Black/orange Business Lab visual theme
+- Report builder modal/wizard placeholder
+- Five agent cards/placeholders
+- Task To Do and Output Report placeholders
+
+This phase uses local React state only. There is no database, real
+authentication, backend API, or OpenAI integration yet.
+
+## Phase 2: Local Reports and Tasks
+
+Built so far:
+
+- Local browser-session state for reports, tasks, and output reports
+- LocalStorage persistence so demo data survives refreshes
+- Create Report wizard now creates a real local report
+- Approved/assigned reports create local task assignments
+- Reports can be edited and deleted
+- Tasks can move between To Do, In Progress, and Done
+- Activate Agent creates a local placeholder follow-up task
+- Output Report updates after Activate Agent
+- Dashboard demo flow panel and last-action feedback
+- CSV Insights Agent for every role with local CSV upload/paste analysis
+- Guided /demo page with one-click CEO -> VP -> Manager -> Team Member flow
+
+Phase 2 still does not use a database, Supabase, real authentication, backend
+API, or OpenAI. It proves the product workflow locally first.
+
+## Phase 3: Backend Agent Foundation
+
+Started:
+
+- Added `/api/agent/report`
+- Added `/api/agent/chat`
+- `Activate Agent` now calls the fake backend API route
+- Role agents now call the fake backend chat API
+- API returns a generated task and output report
+- Frontend saves the API-generated task/output into local state
+- Local fallback remains if the fake API call fails
+- Demo OTP authentication stores verified user/business details in localStorage
+- Role selector and dashboards require demo OTP sign-in
+
+OpenAI is still not connected yet. This step creates the frontend-to-backend
+shape first.
+
+## Routes
+
+```text
+/                         Redirects to public About page
+/login                    Demo business login
+/roles                    Role selector
+/about                    About Business Lab
+/waitlist                 Join waitlist
+/demo                     Guided demo mode
+/api/agent/chat           Fake role-agent chat route
+/api/agent/report         Fake backend agent route
+/api/waitlist             Waitlist submissions API
+/dashboard/ceo            CEO dashboard
+/dashboard/vp             VP dashboard
+/dashboard/manager        Manager dashboard
+/dashboard/team-member    Team Member dashboard
+```
+
+## Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```text
+src/app/page.tsx                    Landing page
+src/app/login/page.tsx              Demo login page
+src/app/roles/page.tsx              Role selector page
+src/app/about/page.tsx              About page
+src/app/waitlist/page.tsx           Join waitlist page
+src/app/demo/page.tsx               Guided demo mode page
+src/app/api/waitlist/route.ts       Waitlist API
+src/app/api/agent/chat/route.ts     Fake role-agent chat API
+src/app/api/agent/report/route.ts   Fake backend agent API
+src/app/dashboard/[role]/page.tsx   Dynamic dashboard route
+middleware.ts                       Public/internal route protection
+src/components/brand-header.tsx     Shared header
+src/components/dashboard-shell.tsx  Shared dashboard UI
+src/components/demo-runner.tsx      One-click demo flow UI
+src/components/auth-provider.tsx    Demo OTP auth state
+src/components/login-client.tsx     OTP login flow UI
+src/components/auth-gate.tsx        Sign-in required gate
+src/components/auth-status.tsx      Header auth status
+src/components/report-wizard.tsx    Create Report modal/wizard
+src/lib/agent-types.ts              Shared fake agent response types
+src/lib/business-lab-data.ts        Static demo data
+src/app/layout.tsx                  App metadata and root layout
+src/app/globals.css                 Tailwind import and global styles
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Next Phases
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Phase 2 will add local report creation, editing, deleting, and generated task
+assignment logic.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Phase 3 will add backend API routes and AI agent activation.
 
-## Deploy on Vercel
+## Public Launch Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Public visitors should only use:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+/
+/about
+/waitlist
+```
+
+Internal routes such as `/login`, `/roles`, `/demo`, and `/dashboard/*` are
+protected by middleware. For local demo testing, set:
+
+```text
+ENABLE_DEMO_LOGIN=true
+```
+
+Do not enable demo login for a public Vercel launch unless you intentionally
+want public demo access.
+
+## View Waitlist Submissions
+
+Set `WAITLIST_ADMIN_TOKEN` in `.env.local` or Vercel environment variables.
+
+Waitlist submissions include:
+
+```text
+id, name, email, country_code, phone, role, company, major_problem, status, created_at,
+invite_token, invited_at
+```
+
+Then call:
+
+```powershell
+Invoke-RestMethod `
+  -Uri "http://localhost:3000/api/waitlist" `
+  -Headers @{ "x-admin-token" = "your-token" }
+```
+
+Local development stores submissions in `.data/waitlist.json`. For production,
+connect this API route to Supabase or another durable database.
+
+## Vercel Deployment
+
+1. Push the project to GitHub.
+2. Import it into Vercel.
+3. Add environment variables from `.env.example`.
+4. Leave `ENABLE_DEMO_LOGIN` unset or set to `false` for public launch.
+5. Run the default Vercel build command:
+
+```text
+npm run build
+```
