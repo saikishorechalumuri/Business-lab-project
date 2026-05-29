@@ -5,26 +5,18 @@
 Business Lab is an AI-powered internal business operating system built for the Fitness Lab AI community during the OpenAI x Outskill AI Builders Hackathon. It helps teams convert updates, reports, and ideas into assigned tasks, clear ownership, and measurable progress.
 
 ```text
-Reports -> AI Agent -> Tasks -> Assigned Roles -> Output Report
+Reports -> AI Agents -> Tasks -> Assigned Roles -> Output Reports
 ```
 
 ## Product Snapshot
 
 ```text
-┌──────────────────────┐
-│ Public Website        │
-│ About + Waitlist      │
-└──────────┬───────────┘
-           │ invite-only access
-┌──────────▼───────────┐
-│ Internal OS           │
-│ Login + Role Selector │
-└──────────┬───────────┘
-           │
-┌──────────▼────────────────────────────────────────┐
-│ CEO -> VP -> Manager -> Team Member               │
-│ Reports -> Tasks -> Ownership -> Output Reports   │
-└───────────────────────────────────────────────────┘
+Public Website
+  -> About + Waitlist
+  -> Invite-only access
+  -> Login + Role Selector
+  -> CEO / VP / Manager / Team Member Dashboards
+  -> Reports -> Agents -> Tasks -> Output Reports
 ```
 
 ## Why This Exists
@@ -47,54 +39,38 @@ Win the month -> repeat for 12 months -> win the year
 | Roles | CEO, VP, Manager, Team Member dashboards |
 | Reports | Create Report wizard, edit/delete, local persistence |
 | Tasks | Assigned Tasks, Tasks I Created, status updates |
-| Agents | Role agents, Report Builder Agent, CSV Insights Agent |
-| Backend shape | Fake agent API routes for report and chat flows |
+| Agents | Strategy Agent, Execution Agent, Insights Agent, Report Builder, CSV Insights |
+| Backend | OpenAI-ready agent API routes with safe demo fallback |
 | Demo | One-click guided demo flow at `/demo` |
 | Storage | Supabase waitlist insert plus local fallback |
 
-## Phase Plan
+## Agent Layer
 
-### Phase 1: Build The MVP
+The MVP includes a simple agent orchestrator:
 
-Goal: prove the core product idea with a polished interface and clear flow.
+```text
+CEO -> Strategy Agent
+VP / Manager -> Execution Agent
+Team Member -> Insights Agent
+CSV upload -> CSV Insights Agent
+```
 
-Built:
+Agent activation flow:
 
-- Premium black/orange Business Lab visual system
-- Public About page
-- Waitlist page
-- Demo OTP login
-- Role selector
-- CEO, VP, Manager, and Team Member dashboards
-- Report wizard
-- Agent preview sections
-- Protected internal product pages
+```text
+Dashboard -> Activate Agent -> /api/agent/report
+  -> Agent Orchestrator
+  -> Role Agent
+  -> Generated task + output report
+```
 
-### Phase 2: Launch And Ship
+Agent Q&A flow:
 
-Goal: make the MVP usable enough to share, demo, and collect real interest.
-
-Built:
-
-- Supabase-ready waitlist collection
-- Email, country code, and phone capture
-- Public-only About/Waitlist experience
-- Middleware route protection
-- Local report/task workflows
-- Guided `/demo` mode
-- Fake backend agent APIs
-- Vercel-ready build
-
-### Phase 3: Make It Real
-
-Next:
-
-- Real invite approval flow
-- Admin waitlist review dashboard
-- Real OTP/email provider
-- Real OpenAI agent responses
-- Durable report/task database
-- Production analytics and feedback loop
+```text
+Dashboard -> Ask Agent -> /api/agent/chat
+  -> OpenAI if OPENAI_API_KEY exists
+  -> Demo fallback if no key exists
+```
 
 ## Product Journey
 
@@ -138,8 +114,8 @@ Visitor
 
 ```text
 /api/waitlist       Waitlist submission API
-/api/agent/report   Fake report-agent API
-/api/agent/chat     Fake role-agent chat API
+/api/agent/report   Agent orchestration API
+/api/agent/chat     Agent question-answer API
 ```
 
 ## Tech Stack
@@ -151,6 +127,7 @@ Visitor
 | Styling | Tailwind CSS |
 | Hosting | Vercel |
 | Waitlist DB | Supabase |
+| AI-ready layer | OpenAI Responses API |
 | Local MVP state | React state + localStorage |
 | Auth MVP | Demo OTP + protected routes |
 
@@ -177,13 +154,11 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 WAITLIST_ADMIN_TOKEN=your-secure-token
 ENABLE_DEMO_LOGIN=true
+OPENAI_API_KEY=your-openai-api-key
+OPENAI_MODEL=gpt-4.1-mini
 ```
 
-For public Vercel launch, do not enable demo login unless reviewers need internal demo access.
-
-```text
-ENABLE_DEMO_LOGIN=false
-```
+For public Vercel launch, only enable demo login if reviewers need internal demo access.
 
 ## View Waitlist Submissions
 
@@ -214,11 +189,7 @@ major_problem, status, created_at, invite_token, invited_at
 2. Import the repo into Vercel.
 3. Add environment variables from `.env.example`.
 4. Keep public routes open and internal routes protected.
-5. Deploy with:
-
-```text
-npm run build
-```
+5. Deploy with Vercel.
 
 ## Founder
 
@@ -242,6 +213,7 @@ Submission assets:
 - One-page pitch brief
 - Working waitlist
 - Protected internal MVP demo
+- Agent orchestration foundation
 
 ## Tiny Award
 
@@ -251,4 +223,3 @@ Presented to: Sai Kishore Chalumuri
 For shipping a founder-led AI execution OS under deadline pressure.
 Status: Built. Shipped. Ready for review.
 ```
-

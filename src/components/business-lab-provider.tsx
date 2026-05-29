@@ -180,7 +180,7 @@ export function BusinessLabProvider({ children }: { children: ReactNode }) {
       },
       async activateAgent(role) {
         const roleReports = reports.filter((report) => report.ownerRole === role);
-        setLastAction(`${roleSlugToName(role)} agent is calling the fake backend API...`);
+        setLastAction(`${roleSlugToName(role)} Agent is analyzing reports...`);
 
         try {
           const response = await fetch("/api/agent/report", {
@@ -214,12 +214,12 @@ export function BusinessLabProvider({ children }: { children: ReactNode }) {
             [role]: result.outputReport,
           }));
           setLastAction(
-            `${roleSlugToName(role)} agent used the fake API and created a task for ${roleSlugToName(result.task.assignedTo)}.`,
+            `${roleSlugToName(role)} Agent created a task for ${roleSlugToName(result.task.assignedTo)}.`,
           );
           return;
         } catch {
           setLastAction(
-            "Fake backend API failed, so Business Lab used the local fallback agent.",
+            "Strategy Agent API failed, so Business Lab used the local fallback agent.",
           );
         }
 
