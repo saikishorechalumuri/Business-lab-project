@@ -3,11 +3,39 @@ import type {
   AgentChatRequestPayload,
   AgentChatResponsePayload,
 } from "@/lib/agent-types";
+import {
+  checkRateLimit,
+  hasBusinessLabAccess,
+  readLimitedJson,
+  reject,
+  sanitizeText,
+  validateSameOrigin,
+} from "@/lib/security";
 
 export async function POST(request: Request) {
-  const payload = (await request.json()) as AgentChatRequestPayload;
-  const question = payload.question?.trim() || "What should I focus on next?";
-  const agentName = payload.agentName || "Business Lab Agent";
+  if (!validateSameOrigin(request)) {
+    return reject("Blocked cross-site agent request.");
+  }
+
+  if (!hasBusinessLabAccess(request)) {
+    return reject("Agent access requires demo login.");
+  }
+
+  if (!checkRateLimit(request)) {
+    return reject("Too many agent requests. Please wait a minute.", 429);
+  }
+
+  let payload: AgentChatRequestPayload;
+
+  try {
+    payload = await readLimitedJson<AgentChatRequestPayload>(request);
+  } catch {
+    return reject("Invalid or oversized agent request.", 400);
+  }
+
+  const question =
+    sanitizeText(payload.question, 900) || "What should I focus on next?";
+  const agentName = sanitizeText(payload.agentName, 80) || "Business Lab Agent";
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (apiKey) {

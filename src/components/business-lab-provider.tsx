@@ -185,6 +185,7 @@ export function BusinessLabProvider({ children }: { children: ReactNode }) {
         try {
           const response = await fetch("/api/agent/report", {
             method: "POST",
+            credentials: "same-origin",
             headers: {
               "Content-Type": "application/json",
             },

@@ -35,6 +35,7 @@ export function RoleAgentPanel({ agents }: RoleAgentPanelProps) {
     try {
       const response = await fetch("/api/agent/chat", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },

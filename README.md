@@ -160,6 +160,15 @@ OPENAI_MODEL=gpt-4.1-mini
 
 For public Vercel launch, only enable demo login if reviewers need internal demo access.
 
+## Security Notes
+
+- Never commit `.env.local`, API keys, service role keys, or screenshots of secrets.
+- `OPENAI_API_KEY` is server-only. It must never use the `NEXT_PUBLIC_` prefix.
+- Agent API routes require same-origin requests and the `business_lab_access=granted` demo access cookie.
+- Agent API routes include request size limits, text sanitization, and basic rate limiting.
+- Supabase public access is limited to waitlist inserts only. Do not add public select/update/delete policies.
+- Rotate the OpenAI key immediately if it is ever shared publicly.
+
 ## View Waitlist Submissions
 
 In Supabase:
